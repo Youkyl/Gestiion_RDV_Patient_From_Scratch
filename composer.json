@@ -1,0 +1,18 @@
+{
+    "name": "youho/patient_php_from_scratch",
+    "description": "Apllication de gestiion de RDV patient",
+    "autoload": {
+        "psr-4": {
+            "Youho\\PatientPhpFromScratch\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Youkyl",
+            "email": "youhounk@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
