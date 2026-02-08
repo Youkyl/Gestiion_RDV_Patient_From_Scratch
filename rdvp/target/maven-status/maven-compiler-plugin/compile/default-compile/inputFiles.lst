@@ -1,0 +1,16 @@
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\App.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\entity\Patient.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\repository\PatientRepository.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\entity\Specialite.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\service\interface\PatientServiceImpl.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\repository\DemandeRDVRepository.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\repository\interface\DemandeRDVRepositoryImpl.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\service\PatientService.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\config\DatabaseConnection.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\entity\Statut.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\service\interface\DemandeRDVServiceImpl.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\entity\DemandeRDV.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\service\DemandeRDVService.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\repository\interfaces\DemandeRDVRepository.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\repository\interfaces\PatientRepository.java
+C:\Users\youho\OneDrive\Desktop\Formation_Baila\Java\Gestiion_RDV_Patient_JAVA\rdvp\src\main\java\com\grdvp\repository\interface\PatientientRepositoryImpl.java

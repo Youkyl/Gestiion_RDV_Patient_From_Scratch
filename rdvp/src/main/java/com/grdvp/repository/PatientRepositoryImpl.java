@@ -1,0 +1,151 @@
+package com.grdvp.repository;
+
+import com.grdvp.config.DatabaseConnection;
+import com.grdvp.entity.Patient;
+import com.grdvp.repository.interfaces.PatientRepository;
+
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+
+public class PatientRepositoryImpl implements PatientRepository {
+
+    private static final Gson GSON = new Gson();
+    private static final Type LIST_STRING = new TypeToken<List<String>>() {}.getType();
+
+    private static PatientRepositoryImpl instance;
+    private Connection db;
+
+    private PatientRepositoryImpl() {
+        try {
+            this.db = DatabaseConnection.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static PatientRepositoryImpl getInstance() {
+        if (instance == null) {
+            instance = new PatientRepositoryImpl();
+        }
+        return instance;
+    }
+
+    @Override
+    public void insertPatient(Patient patient) {
+        String sql = "INSERT INTO patient (patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday) " +
+                     "VALUES (?, ?, ?, ?, ?, ?::jsonb, ?, ?, ?) RETURNING id, patient_code, created_at";
+        try (PreparedStatement ps = db.prepareStatement(sql)) {
+            ps.setString(1, patient.getPatientCode() != null ? patient.getPatientCode() : null);
+            ps.setString(2, patient.getLastname());
+            ps.setString(3, patient.getFirstname());
+            ps.setString(4, patient.getAddress());
+            ps.setString(5, patient.getPhone());
+            ps.setString(6, patient.getMedicalHistory() != null ? GSON.toJson(patient.getMedicalHistory()) : "[]");
+            ps.setString(7, patient.getEmail());
+            ps.setString(8, patient.getPassword());
+            ps.setObject(9, patient.getBirthday());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                patient.setId(rs.getInt("id"));
+                patient.setPatientCode(rs.getString("patient_code"));
+                patient.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updatePersonalInformation(Patient patient) {
+        String sql = "UPDATE patient SET lastname=?, firstname=?, address=?, phone=?, birthday=? WHERE id=?";
+        try (PreparedStatement ps = db.prepareStatement(sql)) {
+            ps.setString(1, patient.getLastname());
+            ps.setString(2, patient.getFirstname());
+            ps.setString(3, patient.getAddress());
+            ps.setString(4, patient.getPhone());
+            ps.setObject(5, patient.getBirthday());
+            ps.setInt(6, patient.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateMedicalHistory(Patient patient, List<String> medicalHistory) {
+        String sql = "UPDATE patient SET medical_history = ?::jsonb WHERE id = ?";
+        try (PreparedStatement ps = db.prepareStatement(sql)) {
+            ps.setString(1, GSON.toJson(medicalHistory != null ? medicalHistory : new ArrayList<>()));
+            ps.setInt(2, patient.getId());
+            ps.executeUpdate();
+            patient.setMedicalHistory(medicalHistory);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Patient findByEmailAndPassword(String email, String password) {
+        String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient WHERE email = ? AND password = ?";
+        try (PreparedStatement ps = db.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return mapRowToPatient(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Patient> findAll() {
+        String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient ORDER BY id";
+        List<Patient> list = new ArrayList<>();
+        try (PreparedStatement ps = db.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(mapRowToPatient(rs));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public Patient findById(int id) {
+        String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient WHERE id = ?";
+        try (PreparedStatement ps = db.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return mapRowToPatient(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Patient mapRowToPatient(ResultSet rs) throws SQLException {
+        Patient p = new Patient();
+        p.setId(rs.getInt("id"));
+        p.setPatientCode(rs.getString("patient_code"));
+        p.setLastname(rs.getString("lastname"));
+        p.setFirstname(rs.getString("firstname"));
+        p.setAddress(rs.getString("address"));
+        p.setPhone(rs.getString("phone"));
+        String json = rs.getString("medical_history");
+        p.setMedicalHistory(json != null && !json.isEmpty() ? GSON.fromJson(json, LIST_STRING) : new ArrayList<>());
+        p.setEmail(rs.getString("email"));
+        p.setPassword(rs.getString("password"));
+        Date bd = rs.getDate("birthday");
+        p.setBirthday(bd != null ? bd.toLocalDate() : null);
+        Timestamp created = rs.getTimestamp("created_at");
+        p.setCreatedAt(created != null ? created.toLocalDateTime() : null);
+        return p;
+    }
+}
