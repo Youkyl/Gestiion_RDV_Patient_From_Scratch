@@ -8,12 +8,9 @@ public interface PatientServiceImpl {
     void addPatient(Patient patient);
     void addPersonalInformation(Patient patient);
     void addMedicalHistory(Patient patient, List<String> medicalHistory);
-    String generatePatientCode(Patient patient);
-    /** Login: find patient by email and password (connexion) */
+    String generatePatientCode();
     Patient connexion(String email, String password);
-    /** Complete patient with date of birth, address, phone */
-    void completePatientInfo(Patient patient, LocalDate dateNaissance, String adresse, String telephone);
-    /** Add one antecedent to patient's medical history */
+    void completePatientInfo(Patient patient, LocalDate dateNaissance, String adresse);
     void addAntecedent(Patient patient, String antecedent);
     List<Patient> getAllPatien();
 }

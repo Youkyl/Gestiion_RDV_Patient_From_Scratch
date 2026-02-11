@@ -11,5 +11,5 @@ public interface DemandeRDVRepository {
     List<DemandeRDV> selectAppointment(int patientId);
     DemandeRDV findById(int demandeId);
     void updateStatut(int demandeId, Statut statut);
-    List<DemandeRDV> findAll();
+    //List<DemandeRDV> findAll();
 }

@@ -87,7 +87,7 @@ public class DemandeRDV {
         this.statut = statut;
     }
 
-    @Override
+    
     public String toString() {
         String createdAtString = (createdAt != null) ? createdAt.toString() : "null";
         String patientString = (patient != null) ? patient.toString() : "Patient";

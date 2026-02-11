@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class Patient {
-    private Integer id;
-    private String patientCode;
-    private String lastname;
-    private String firstname;
-    private String address;
-    private String phone;
-    private List<String> medicalHistory;
-    private String email;
-    private String password;
-    private LocalDate birthday;
-    private LocalDateTime createdAt;
+    private Integer id; //Generer automatiquement dans la base de donnees
+    private String patientCode; //Generer automatiquement dans le service
+    private String lastname; //Obligatoire lors de la creation d'un nouveau patient
+    private String firstname; //Obligatoire lors de la creation d'un nouveau patient
+    private String address; //Facultatif lors de la creation d'un nouveau patient
+    private String phone;  //Obligatoire lors de la creation d'un nouveau patient
+    private List<String> medicalHistory; //Facultatif lors de la creation d'un nouveau patient
+    private String email; //Obligatoire lors de la creation d'un nouveau patient
+    private String password; //Obligatoire lors de la creation d'un nouveau patient
+    private LocalDate birthday; //Obligatoire lors de la creation d'un nouveau patient
+    private LocalDateTime createdAt; //Generer automatiquement dans le service || dans la base de donnees
     private List<DemandeRDV> demandes;
 
     public Patient(
@@ -46,6 +46,29 @@ public class Patient {
         this.birthday = birthday;
         this.createdAt = createdAt;
         this.demandes = demandes;
+    }
+
+    public Patient(
+            String lastname,
+            String firstname,
+            //String address,
+            String phone,
+            String email,
+            String password
+            //LocalDate birthday
+    ) {
+        //this.id = id;
+        //this.patientCode = patientCode;
+        this.lastname = lastname;
+        this.firstname = firstname;
+        //this.address = address;
+        this.phone = phone;
+        //this.medicalHistory = medicalHistory != null ? medicalHistory : new ArrayList<>();
+        this.email = email;
+        this.password = password;
+        //this.birthday = birthday;
+        //this.createdAt = createdAt;
+        //this.demandes = demandes;
     }
 
     public Patient() {
@@ -145,7 +168,7 @@ public class Patient {
     }
 
 
-    @Override
+    
     public String toString() {
         return String.format(
             "%s %s %s %s %s %s %s %s %s %s %s",

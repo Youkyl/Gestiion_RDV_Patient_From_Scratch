@@ -29,7 +29,7 @@ public class PatientService implements PatientServiceImpl {
     @Override
     public void addPatient(Patient patient) {
         if (patient.getPatientCode() == null || patient.getPatientCode().isEmpty()) {
-            patient.setPatientCode(generatePatientCode(patient));
+            patient.setPatientCode(generatePatientCode());
         }
         if (patient.getCreatedAt() == null) {
             patient.setCreatedAt(LocalDateTime.now());
@@ -48,13 +48,9 @@ public class PatientService implements PatientServiceImpl {
     }
 
     @Override
-    public String generatePatientCode(Patient patient) {
-        final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder code = new StringBuilder(8);
-        for (int i = 0; i < 8; i++) {
-            code.append(chars.charAt(ThreadLocalRandom.current().nextInt(chars.length())));
-        }
-        return code.toString();
+    public String generatePatientCode() {
+        int nextNumber = patientRepo.getNextPatientCodeNumber(); 
+        return String.format("PAT-%04d", nextNumber);
     }
 
     @Override
@@ -63,10 +59,10 @@ public class PatientService implements PatientServiceImpl {
     }
 
     @Override
-    public void completePatientInfo(Patient patient, LocalDate dateNaissance, String adresse, String telephone) {
+    public void completePatientInfo(Patient patient, LocalDate dateNaissance, String adresse/*, String telephone */) {
         patient.setBirthday(dateNaissance);
         patient.setAddress(adresse);
-        patient.setPhone(telephone);
+        //patient.setPhone(telephone);
         patientRepo.updatePersonalInformation(patient);
     }
 

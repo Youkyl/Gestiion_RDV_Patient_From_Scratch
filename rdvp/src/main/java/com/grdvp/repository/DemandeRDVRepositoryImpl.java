@@ -31,9 +31,10 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         return instance;
     }
 
-    @Override
+    
     public void insertDemande(DemandeRDV demande) {
         String sql = "INSERT INTO demande_rdv (description, patient_id, specialite, statut) VALUES (?, ?, ?::specialite_enum, ?::statut_enum) RETURNING id, created_at";
+
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             ps.setString(1, demande.getDescription());
             int patientId = demande.getPatientId() != null ? demande.getPatientId() : (demande.getPatient() != null ? demande.getPatient().getId() : 0);
@@ -51,12 +52,12 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         }
     }
 
-    @Override
+    
     public List<DemandeRDV> selectDemande(int patientId) {
         return findDemandesByCondition("WHERE patient_id = ?", patientId);
     }
 
-    @Override
+    
     public List<DemandeRDV> selectDemandeByStatut(String statut) {
         String sql = "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv WHERE statut = ?::statut_enum ORDER BY created_at DESC";
         List<DemandeRDV> list = new ArrayList<>();
@@ -70,12 +71,12 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         return list;
     }
 
-    @Override
+    
     public List<DemandeRDV> selectAppointment(int patientId) {
         return selectDemande(patientId);
     }
 
-    @Override
+    
     public DemandeRDV findById(int demandeId) {
         String sql = "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv WHERE id = ?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
@@ -88,7 +89,7 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         return null;
     }
 
-    @Override
+    
     public void updateStatut(int demandeId, Statut statut) {
         String sql = "UPDATE demande_rdv SET statut = ?::statut_enum WHERE id = ?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
@@ -100,7 +101,7 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         }
     }
 
-    @Override
+    
     public List<DemandeRDV> findAll() {
         return findDemandesByCondition("", null);
     }

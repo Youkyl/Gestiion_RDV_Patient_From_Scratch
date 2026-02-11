@@ -1,13 +1,13 @@
 package com.grdvp;
 
-/**
- * Hello world!
- *
- */
+import com.grdvp.view.PatientView;
+
+
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        PatientView patientView = new PatientView();
+        patientView.mainMenu();
     }
 }

@@ -37,7 +37,7 @@ public class PatientRepositoryImpl implements PatientRepository {
         return instance;
     }
 
-    @Override
+    
     public void insertPatient(Patient patient) {
         String sql = "INSERT INTO patient (patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday) " +
                      "VALUES (?, ?, ?, ?, ?, ?::jsonb, ?, ?, ?) RETURNING id, patient_code, created_at";
@@ -62,7 +62,7 @@ public class PatientRepositoryImpl implements PatientRepository {
         }
     }
 
-    @Override
+    
     public void updatePersonalInformation(Patient patient) {
         String sql = "UPDATE patient SET lastname=?, firstname=?, address=?, phone=?, birthday=? WHERE id=?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
@@ -78,7 +78,7 @@ public class PatientRepositoryImpl implements PatientRepository {
         }
     }
 
-    @Override
+    
     public void updateMedicalHistory(Patient patient, List<String> medicalHistory) {
         String sql = "UPDATE patient SET medical_history = ?::jsonb WHERE id = ?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
@@ -91,7 +91,7 @@ public class PatientRepositoryImpl implements PatientRepository {
         }
     }
 
-    @Override
+    
     public Patient findByEmailAndPassword(String email, String password) {
         String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient WHERE email = ? AND password = ?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
@@ -105,7 +105,7 @@ public class PatientRepositoryImpl implements PatientRepository {
         return null;
     }
 
-    @Override
+    
     public List<Patient> findAll() {
         String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient ORDER BY id";
         List<Patient> list = new ArrayList<>();
@@ -117,22 +117,36 @@ public class PatientRepositoryImpl implements PatientRepository {
         return list;
     }
 
-    @Override
+    
     public Patient findById(int id) {
-        String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient WHERE id = ?";
+        String sql = "SELECT patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient WHERE id = ?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapRowToPatient(rs);
+            if (rs.next()) 
+                return mapRowToPatient(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    public int getNextPatientCodeNumber() {
+        String sql = "SELECT MAX(CAST(SUBSTRING(patient_code, 5) AS INTEGER)) AS max_num FROM patient WHERE patient_code LIKE 'PAT-%'";
+        try (PreparedStatement ps = db.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                int maxNum = rs.getInt("max_num");
+                return maxNum + 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
     private Patient mapRowToPatient(ResultSet rs) throws SQLException {
         Patient p = new Patient();
-        p.setId(rs.getInt("id"));
+        //p.setId(rs.getInt("id"));
         p.setPatientCode(rs.getString("patient_code"));
         p.setLastname(rs.getString("lastname"));
         p.setFirstname(rs.getString("firstname"));
