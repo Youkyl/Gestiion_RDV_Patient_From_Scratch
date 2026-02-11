@@ -6,12 +6,13 @@ public class DemandeRDV {
     private Integer id;
     private String description;
     private LocalDateTime createdAt;
-    private Integer patientId;
+    //private Integer patientId;
     private Patient patient;
     private Specialite specialite;
     private Statut statut;
 
     public DemandeRDV() {}
+
 
     public DemandeRDV(
         Patient patient,
@@ -25,7 +26,6 @@ public class DemandeRDV {
         this.description = description;
         this.createdAt = createdAt;
         this.patient = patient;
-        this.patientId = patient != null ? patient.getId() : null;
         this.specialite = specialite;
         this.statut = statut;
     }
@@ -39,11 +39,8 @@ public class DemandeRDV {
     }
 
     public Integer getPatientId() {
-        return patientId != null ? patientId : (patient != null ? patient.getId() : null);
-    }
-
-    public void setPatientId(Integer patientId) {
-        this.patientId = patientId;
+        int patientId = patient.getId();
+        return patientId;
     }
 
     public String getDescription() {
@@ -66,10 +63,6 @@ public class DemandeRDV {
         return patient;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-        this.patientId = patient != null ? patient.getId() : null;
-    }
 
     public Specialite getSpecialite() {
         return specialite;
@@ -102,5 +95,10 @@ public class DemandeRDV {
             specialiteString,
             statutString
         );
+    }
+
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 }

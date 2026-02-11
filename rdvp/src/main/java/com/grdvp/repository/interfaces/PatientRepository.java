@@ -9,6 +9,6 @@ public interface PatientRepository {
     void updateMedicalHistory(Patient patient, List<String> medicalHistory);
     Patient findByEmailAndPassword(String email, String password);
     //List<Patient> findAll();
-    Patient findById(int id);
+    Patient findById(Integer id);
     int getNextPatientCodeNumber();
 }

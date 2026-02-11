@@ -12,5 +12,5 @@ public interface PatientServiceImpl {
     Patient connexion(String email, String password);
     void completePatientInfo(Patient patient, LocalDate dateNaissance, String adresse);
     void addAntecedent(Patient patient, String antecedent);
-    List<Patient> getAllPatien();
+    Patient getConnectedPatientInfo(Integer patientId);
 }

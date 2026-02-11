@@ -2,6 +2,7 @@ package com.grdvp.repository;
 
 import com.grdvp.config.DatabaseConnection;
 import com.grdvp.entity.DemandeRDV;
+import com.grdvp.entity.Patient;
 import com.grdvp.entity.Specialite;
 import com.grdvp.entity.Statut;
 import com.grdvp.repository.interfaces.DemandeRDVRepository;
@@ -36,12 +37,19 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         String sql = "INSERT INTO demande_rdv (description, patient_id, specialite, statut) VALUES (?, ?, ?::specialite_enum, ?::statut_enum) RETURNING id, created_at";
 
         try (PreparedStatement ps = db.prepareStatement(sql)) {
+
             ps.setString(1, demande.getDescription());
-            int patientId = demande.getPatientId() != null ? demande.getPatientId() : (demande.getPatient() != null ? demande.getPatient().getId() : 0);
-            ps.setInt(2, patientId);
-            ps.setString(3, demande.getSpecialite() != null ? demande.getSpecialite().name() : null);
+
+            //int patientId = demande.getPatient().getId();
+
+            ps.setInt(2, demande.getPatient().getId());
+            
+            ps.setString(3, demande.getSpecialite().name());
+            
             ps.setString(4, demande.getStatut() != null ? demande.getStatut().name() : Statut.EN_COURS.name());
+
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 demande.setId(rs.getInt("id"));
                 Timestamp created = rs.getTimestamp("created_at");
@@ -106,10 +114,12 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         return findDemandesByCondition("", null);
     }
 
+
     private List<DemandeRDV> findDemandesByCondition(String whereClause, Integer patientId) {
         String sql = whereClause.isEmpty()
             ? "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv ORDER BY created_at DESC"
             : "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv " + whereClause + " ORDER BY created_at DESC";
+
         List<DemandeRDV> list = new ArrayList<>();
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             if (patientId != null) ps.setInt(1, patientId);
@@ -127,7 +137,12 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
         d.setDescription(rs.getString("description"));
         Timestamp created = rs.getTimestamp("created_at");
         d.setCreatedAt(created != null ? created.toLocalDateTime() : null);
-        d.setPatientId(rs.getInt("patient_id"));
+
+        if (d.getPatient() == null) {
+            d.setPatient(new Patient());
+        }
+
+        d.getPatient().setId(rs.getInt("patient_id"));
         String spec = rs.getString("specialite");
         d.setSpecialite(spec != null ? Specialite.valueOf(spec) : null);
         String st = rs.getString("statut");

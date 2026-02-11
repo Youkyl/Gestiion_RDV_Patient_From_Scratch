@@ -2,10 +2,13 @@ package com.grdvp.view;
 
 import com.grdvp.entity.DemandeRDV;
 import com.grdvp.entity.Patient;
+import com.grdvp.entity.Specialite;
+import com.grdvp.entity.Statut;
 import com.grdvp.service.DemandeRDVService;
 import com.grdvp.service.PatientService;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class PatientView {
@@ -34,7 +37,7 @@ public class PatientView {
     {
         System.out.println("Bienvenue " + patient.getLastname() + " " + patient.getFirstname() + " dans votre espace Patient");
         System.out.println("1- Ajouter des informations personnelles");
-        System.out.println("2- voir vos informations personnelles");
+        System.out.println("2- Voir vos informations personnelles");
         System.out.println("3- Ajouter des antecedents medicaux");
         System.out.println("4- Faire une demande de rendez-vous");
         System.out.println("5- Consulter vos demandes de rendez-vous");
@@ -77,13 +80,18 @@ public class PatientView {
                     // System.out.println("Veillez entrer votre date de naissance: ");
                     // LocalDate birthday = LocalDate.parse(scanner.nextLine());
                     
-                    Patient patient = new Patient(
-                        nom, 
-                        prenom, 
-                        number, 
-                        email, 
-                        password
-                    );
+                    // Patient patient = new Patient(
+                    //     nom, 
+                    //     prenom, 
+                    //     number, 
+                    //     email, 
+                    //     password
+                    // );
+
+                    Patient patient = patientServ.createPatientCode(nom, prenom, number, email, password);
+
+                    //System.out.println("Patient ID avant insertion demande : " + patient.getId());
+
                     patientServ.addPatient(patient);
                     break;
 
@@ -105,9 +113,11 @@ public class PatientView {
 
                             switch (choix2) {
                                 case 1:
+                                    System.out.println("Patient ID : " + patientC.getId());
+
                                     System.out.println("Ajouter des informations personnelles pour le patient: " + patientC.getLastname() + " " + patientC.getFirstname()); 
 
-                                    System.out.println("Veillez entrer votre date de naissance: ");
+                                    System.out.println("Veillez entrer votre date de naissance (format: YYYY-MM-DD): ");
                                     LocalDate birthday = LocalDate.parse(scanner.nextLine());
 
                                     System.out.println("Veillez entrer votre addresse de domicile: ");
@@ -119,8 +129,66 @@ public class PatientView {
 
                                 case 2:
                                     System.out.println("Mes information personnelles:");
+                                    //System.out.println("Patient ID : " + patientC.getId());
                                     
+                                    patientServ.getConnectedPatientInfo(patientC.getId());
+                                    
+                                    break;
+                                case 3:
+                                    System.out.println("Ajouter des antecedents medicaux ");
 
+                                    System.out.println("Veillez saisir des antecedents medicaux: ");
+                                    // List<String> medicalHistory = scanner.nextLine().lines().toList();
+                                    String medicalHistory = scanner.nextLine();
+
+                                    patientServ.addAntecedent(patientC, medicalHistory);
+                                    break;
+                                case 4:
+                                    System.out.println("Faire une demande de rendez-vous");
+
+                                    System.out.println("Veillez choisir dans la liste une specialite");
+                                    for (Specialite s : Specialite.values()) {
+                                        System.out.println("- " + s.name());
+                                    }
+                                    Specialite spe = Specialite.valueOf(scanner.nextLine());
+
+                                    System.out.println("Veillez saisir une description pour votre demande de rendez-vous (Optionnel): ");
+                                    String description = scanner.nextLine();
+
+                                    DemandeRDV demande = demandeServ.createDemandeRDV(patientC, spe, description);
+                                    demandeServ.addDemand(demande);
+                                    break;
+
+                                case 5:
+                                    System.out.println("Consulter vos demandes de rendez-vous");
+
+                                    demandeServ.searchDemand(patientC);
+                                    break;
+
+                                case 6:
+                                    System.out.println("Consulter vos rendez-vous");
+
+                                    demandeServ.searchApointment(patientC.getId());
+                                    break;
+
+                                case 7:
+                                    System.out.println("Changer le statut d'une demande de rendez-vous");
+
+                                    System.out.println("Veillez saisir l'ID de la demande de rendez-vous: ");
+                                    int demandeId = scanner.nextInt();
+                                    scanner.nextLine(); // Consume the newline character
+
+                                    System.out.println("Veillez choisir le nouveau statut de votre demande de rendez-vous: ");
+                                    for (Statut s : Statut.values()) {
+                                        System.out.println("- " + s.name());
+                                    }
+                                    String newStatut = scanner.nextLine();
+                                    
+                                    DemandeRDV d = demandeServ.serchDemandeById(demandeId);
+
+                                    demandeServ.changeDemandeStatut(d, Statut.valueOf(newStatut));
+                                    
+                                    break;
                                 default:
                                     break;
                             }

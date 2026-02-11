@@ -1,12 +1,13 @@
 package com.grdvp.service.interfaces;
 
 import com.grdvp.entity.DemandeRDV;
+import com.grdvp.entity.Patient;
 import com.grdvp.entity.Statut;
 import java.util.List;
 
 public interface DemandeRDVServiceImpl {
     void addDemand(DemandeRDV demande);
-    List<DemandeRDV> searchDemand(int patientId);
+    List<DemandeRDV> searchDemand(Patient patient);
     List<DemandeRDV> filterDemandByStatus(String statut);
     List<DemandeRDV> searchApointment(int patientId);
     DemandeRDV serchDemandeById(int demandeId);

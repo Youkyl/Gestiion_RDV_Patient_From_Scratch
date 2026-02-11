@@ -26,6 +26,18 @@ public class PatientService implements PatientServiceImpl {
         return instance;
     }
 
+    public Patient createPatientCode(String lastname, String firstname, String phone, String email, String password) 
+    {
+        Patient patient = new Patient();
+        patient.setLastname(lastname);
+        patient.setFirstname(firstname);
+        patient.setPhone(phone);
+        patient.setEmail(email);
+        patient.setPassword(password);
+        
+        return patient;
+    }
+
     @Override
     public void addPatient(Patient patient) {
         if (patient.getPatientCode() == null || patient.getPatientCode().isEmpty()) {
@@ -59,10 +71,9 @@ public class PatientService implements PatientServiceImpl {
     }
 
     @Override
-    public void completePatientInfo(Patient patient, LocalDate dateNaissance, String adresse/*, String telephone */) {
+    public void completePatientInfo(Patient patient, LocalDate dateNaissance, String adresse) {
         patient.setBirthday(dateNaissance);
         patient.setAddress(adresse);
-        //patient.setPhone(telephone);
         patientRepo.updatePersonalInformation(patient);
     }
 
@@ -75,7 +86,7 @@ public class PatientService implements PatientServiceImpl {
     }
 
     @Override
-    public List<Patient> getAllPatien() {
-        return patientRepo.findAll();
+    public Patient getConnectedPatientInfo(Integer patientId) {
+        return patientRepo.findById(patientId);
     }
 }

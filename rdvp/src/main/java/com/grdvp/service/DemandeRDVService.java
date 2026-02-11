@@ -29,11 +29,10 @@ public class DemandeRDVService implements DemandeRDVServiceImpl {
         return instance;
     }
 
-    /** Create a new DemandeRDV (in memory). Use registerDemandeRDV to persist. */
     public DemandeRDV createDemandeRDV(Patient patient, Specialite specialite, String description) {
         DemandeRDV d = new DemandeRDV();
         d.setPatient(patient);
-        d.setPatientId(patient != null ? patient.getId() : null);
+        d.getPatient().setId(patient.getId());
         d.setSpecialite(specialite);
         d.setDescription(description);
         d.setCreatedAt(LocalDateTime.now());
@@ -49,8 +48,8 @@ public class DemandeRDVService implements DemandeRDVServiceImpl {
     }
 
     @Override
-    public List<DemandeRDV> searchDemand(int patientId) {
-        return demandeRepo.selectDemande(patientId);
+    public List<DemandeRDV> searchDemand(Patient patient) {
+        return demandeRepo.selectDemande(patient.getId());
     }
 
     @Override
@@ -63,10 +62,6 @@ public class DemandeRDVService implements DemandeRDVServiceImpl {
         return demandeRepo.selectDemandeByStatut(statut);
     }
 
-    @Override
-    public DemandeRDV serchDemandeById(int demandeId) {
-        return demandeRepo.findById(demandeId);
-    }
 
     @Override
     public void changeDemandeStatut(DemandeRDV demande, Statut statut) {
@@ -79,5 +74,10 @@ public class DemandeRDVService implements DemandeRDVServiceImpl {
     @Override
     public List<DemandeRDV> getAllDemande() {
         return demandeRepo.findAll();
+    }
+
+    @Override
+    public DemandeRDV serchDemandeById(int demandeId) {
+        return demandeRepo.findById(demandeId);
     }
 }
