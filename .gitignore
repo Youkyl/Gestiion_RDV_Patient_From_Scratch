@@ -1,5 +1,178 @@
-/vendor
-/env
-/.env.local
+# ================================
+# .gitignore pour PHP
+# ================================
+
+# ================================
+# FICHIERS SENSIBLES
+# ================================
 .env
-vendor/
+.env.local
+.env.*.local
+config.php
+database.php
+secrets/
+*.key
+*.pem
+!.env.example
+
+# ================================
+# COMPOSER
+# ================================
+/vendor/
+composer.lock
+composer.phar
+/phpunit.xml
+.phpunit.result.cache
+
+# ================================
+# LARAVEL
+# ================================
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+/storage/logs/*.log
+/.vagrant
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.phpunit.result.cache
+auth.json
+
+# ================================
+# SYMFONY
+# ================================
+/var/
+/var/cache/
+/var/logs/
+/var/sessions/
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+# ================================
+# WORDPRESS
+# ================================
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+wp-content/backup-db/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+wp-content/languages/
+/sitemap.xml
+/sitemap.xml.gz
+*.log
+
+# ================================
+# DRUPAL
+# ================================
+sites/*/settings*.php
+sites/*/files
+sites/*/private
+
+# ================================
+# PHPSTORM
+# ================================
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# ================================
+# VS CODE
+# ================================
+.vscode/
+*.code-workspace
+
+# ================================
+# NETBEANS
+# ================================
+nbproject/
+
+# ================================
+# SUBLIME TEXT
+# ================================
+*.sublime-project
+*.sublime-workspace
+
+# ================================
+# FICHIERS TEMPORAIRES PHP
+# ================================
+*.cache
+*.tmp
+.cache
+
+# ================================
+# LOGS
+# ================================
+*.log
+/logs/
+error_log
+php_errors.log
+
+# ================================
+# TESTS
+# ================================
+/tests/_output/
+/tests/_support/_generated
+
+# ================================
+# COVERAGE
+# ================================
+/coverage/
+clover.xml
+coverage.xml
+
+# ================================
+# BASES DE DONNÉES
+# ================================
+*.sql
+*.sqlite
+*.db
+
+# ================================
+# MACOS
+# ================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ================================
+# WINDOWS
+# ================================
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+
+# ================================
+# LINUX
+# ================================
+*~
+.directory
+.Trash-*
+
+# ================================
+# FICHIERS BUILD
+# ================================
+/build/
+/dist/
