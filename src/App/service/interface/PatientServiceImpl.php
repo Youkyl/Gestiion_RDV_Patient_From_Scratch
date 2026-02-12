@@ -9,4 +9,5 @@ interface PatientServiceImpl
     public function addPatien(Patient $patient): void;
     public function addPersonnalInformation(): void;
     public function addMedicalHistory(): void;
+    public function generatePatientCode(): void;
 }
