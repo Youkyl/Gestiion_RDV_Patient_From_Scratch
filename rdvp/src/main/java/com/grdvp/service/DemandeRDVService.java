@@ -5,7 +5,6 @@ import com.grdvp.entity.Patient;
 import com.grdvp.entity.Specialite;
 import com.grdvp.entity.Statut;
 import com.grdvp.repository.DemandeRDVRepositoryImpl;
-import com.grdvp.repository.PatientRepositoryImpl;
 import com.grdvp.service.interfaces.DemandeRDVServiceImpl;
 
 import java.time.LocalDateTime;
@@ -15,11 +14,9 @@ public class DemandeRDVService implements DemandeRDVServiceImpl {
 
     private static DemandeRDVService instance;
     private final DemandeRDVRepositoryImpl demandeRepo;
-    private final PatientRepositoryImpl patientRepo;
 
     private DemandeRDVService() {
         this.demandeRepo = DemandeRDVRepositoryImpl.getInstance();
-        this.patientRepo = PatientRepositoryImpl.getInstance();
     }
 
     public static DemandeRDVService getInstance() {
@@ -58,11 +55,10 @@ public class DemandeRDVService implements DemandeRDVServiceImpl {
     }
 
     @Override
-    public List<DemandeRDV> filterDemandByStatus(String statut) {
-        return demandeRepo.selectDemandeByStatut(statut);
+    public List<DemandeRDV> filterDemandByStatus(String statut, int patientId) {
+        return demandeRepo.selectDemandeByStatut(statut, patientId); 
     }
-
-
+    
     @Override
     public void changeDemandeStatut(DemandeRDV demande, Statut statut) {
         if (demande != null && demande.getId() != null) {

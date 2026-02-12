@@ -131,8 +131,10 @@ public class PatientView {
                                     System.out.println("Mes information personnelles:");
                                     //System.out.println("Patient ID : " + patientC.getId());
                                     
-                                    patientServ.getConnectedPatientInfo(patientC.getId());
-                                    
+                                    var info = patientServ.getConnectedPatientInfo(patientC.getId());
+
+                                    System.out.println(info.toString());
+
                                     break;
                                 case 3:
                                     System.out.println("Ajouter des antecedents medicaux ");
@@ -162,13 +164,23 @@ public class PatientView {
                                 case 5:
                                     System.out.println("Consulter vos demandes de rendez-vous");
 
-                                    demandeServ.searchDemand(patientC);
+                                    var list = demandeServ.searchDemand(patientC);
+
+                                    for (DemandeRDV demandeRDV : list) {
+                                        System.out.println("Patient id: " + demandeRDV.getPatientId() + ", Specialite: " + demandeRDV.getSpecialite() + ", Description: " + demandeRDV.getDescription() + ", Statut de la demande: " + demandeRDV.getStatut());
+                                    }
+
                                     break;
 
                                 case 6:
                                     System.out.println("Consulter vos rendez-vous");
 
-                                    demandeServ.searchApointment(patientC.getId());
+                                    list = demandeServ.searchApointment(patientC.getId());
+
+                                    for (DemandeRDV demandeRDV : list) {
+                                        System.out.println("Patient id: " + demandeRDV.getPatientId() + ", Specialite: " + demandeRDV.getSpecialite() + ", Description: " + demandeRDV.getDescription() + ", Statut de la demande: " + demandeRDV.getStatut());
+                                    }
+
                                     break;
 
                                 case 7:
@@ -176,7 +188,7 @@ public class PatientView {
 
                                     System.out.println("Veillez saisir l'ID de la demande de rendez-vous: ");
                                     int demandeId = scanner.nextInt();
-                                    scanner.nextLine(); // Consume the newline character
+                                    scanner.nextLine(); 
 
                                     System.out.println("Veillez choisir le nouveau statut de votre demande de rendez-vous: ");
                                     for (Statut s : Statut.values()) {

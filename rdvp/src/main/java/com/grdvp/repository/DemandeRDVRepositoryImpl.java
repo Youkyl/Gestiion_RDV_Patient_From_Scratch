@@ -8,9 +8,9 @@ import com.grdvp.entity.Statut;
 import com.grdvp.repository.interfaces.DemandeRDVRepository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
 
@@ -34,6 +34,8 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
 
     
     public void insertDemande(DemandeRDV demande) {
+        Objects.requireNonNull(demande, "Patient cannot be null");
+
         String sql = "INSERT INTO demande_rdv (description, patient_id, specialite, statut) VALUES (?, ?, ?::specialite_enum, ?::statut_enum) RETURNING id, created_at";
 
         try (PreparedStatement ps = db.prepareStatement(sql)) {
@@ -56,7 +58,7 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
                 demande.setCreatedAt(created != null ? created.toLocalDateTime() : null);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error inserting demande", e);
         }
     }
 
@@ -66,24 +68,53 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
     }
 
     
-    public List<DemandeRDV> selectDemandeByStatut(String statut) {
-        String sql = "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv WHERE statut = ?::statut_enum ORDER BY created_at DESC";
+    public List<DemandeRDV> selectDemandeByStatut(String statut, int patientId) {
+
+        String sql = (patientId == 0)
+            ? "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv WHERE statut = ?::statut_enum ORDER BY created_at DESC"
+            : "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv WHERE statut = ?::statut_enum AND patient_id = ? ORDER BY created_at DESC";
+
         List<DemandeRDV> list = new ArrayList<>();
+
         try (PreparedStatement ps = db.prepareStatement(sql)) {
+
             ps.setString(1, statut);
+
+            if (patientId != 0) {
+                ps.setInt(2, patientId);
+            }
+
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) list.add(mapRowToDemande(rs));
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error selecting demandes by statut", e);
         }
         return list;
     }
 
     
     public List<DemandeRDV> selectAppointment(int patientId) {
-        return selectDemande(patientId);
+        return selectDemandeByStatut(Statut.ACCEPTE.name(), patientId);
     }
 
+
+    public void updateStatut(int demandeId, Statut statut) {
+        Objects.requireNonNull(statut, "Statut cannot be null");
+        String sql = "UPDATE demande_rdv SET statut = ?::statut_enum WHERE id = ?";
+
+        try (PreparedStatement ps = db.prepareStatement(sql)) {
+
+            ps.setString(1, statut.name());
+            ps.setInt(2, demandeId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating demande statut", e);
+        }
+    }
+   
     
     public DemandeRDV findById(int demandeId) {
         String sql = "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv WHERE id = ?";
@@ -92,31 +123,19 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return mapRowToDemande(rs);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error finding demande by ID", e);
         }
         return null;
     }
 
-    
-    public void updateStatut(int demandeId, Statut statut) {
-        String sql = "UPDATE demande_rdv SET statut = ?::statut_enum WHERE id = ?";
-        try (PreparedStatement ps = db.prepareStatement(sql)) {
-            ps.setString(1, statut.name());
-            ps.setInt(2, demandeId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    
     public List<DemandeRDV> findAll() {
         return findDemandesByCondition("", null);
     }
 
 
     private List<DemandeRDV> findDemandesByCondition(String whereClause, Integer patientId) {
-        String sql = whereClause.isEmpty()
+        String sql = (whereClause == null || whereClause.isEmpty())
             ? "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv ORDER BY created_at DESC"
             : "SELECT id, description, created_at, patient_id, specialite, statut FROM demande_rdv " + whereClause + " ORDER BY created_at DESC";
 
@@ -126,7 +145,7 @@ public class DemandeRDVRepositoryImpl implements DemandeRDVRepository {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) list.add(mapRowToDemande(rs));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error selecting demandes", e);
         }
         return list;
     }

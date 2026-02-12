@@ -42,6 +42,7 @@ public class PatientRepositoryImpl implements PatientRepository {
     public void insertPatient(Patient patient) {
         Objects.requireNonNull(patient, "Patient cannot be null");
         String sql = "INSERT INTO patient (patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday) VALUES (?, ?, ?, ?, ?, ?::jsonb, ?, ?, ?) RETURNING id, patient_code, created_at";
+        
         try (PreparedStatement ps = db.prepareStatement(sql)) {
 
             ps.setString(1, patient.getPatientCode());
@@ -93,6 +94,7 @@ public class PatientRepositoryImpl implements PatientRepository {
     public void updateMedicalHistory(Patient patient, List<String> medicalHistory) {
         Objects.requireNonNull(patient, "Patient cannot be null");
         String sql = "UPDATE patient SET medical_history = ?::jsonb WHERE id = ?";
+
         try (PreparedStatement ps = db.prepareStatement(sql)) {
 
             ps.setString(1, GSON.toJson(medicalHistory != null ? medicalHistory : new ArrayList<>()));
@@ -104,21 +106,24 @@ public class PatientRepositoryImpl implements PatientRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update medical history", e);
-
         }
     }
 
     
     public Patient findByEmailAndPassword(String email, String password) {
+
         String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient WHERE email = ? AND password = ?";
+
         try (PreparedStatement ps = db.prepareStatement(sql)) {
+
             ps.setString(1, email);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) return mapRowToPatient(rs);
+
         } catch (SQLException e) {
             throw new RuntimeException("Failed to select patient", e);
-
         }
         return null;
     }
@@ -127,11 +132,11 @@ public class PatientRepositoryImpl implements PatientRepository {
     public List<Patient> findAll() {
         String sql = "SELECT id, patient_code, lastname, firstname, address, phone, medical_history, email, password, birthday, created_at FROM patient ORDER BY id";
         List<Patient> list = new ArrayList<>();
+
         try (PreparedStatement ps = db.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) list.add(mapRowToPatient(rs));
         } catch (SQLException e) {
             throw new RuntimeException("Failed to select patients", e);
-
         }
         return list;
     }
@@ -146,13 +151,13 @@ public class PatientRepositoryImpl implements PatientRepository {
                 return mapRowToPatient(rs);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to select patient", e);
-
         }
         return null;
     }
 
     public int getNextPatientCodeNumber() {
         String sql = "SELECT MAX(CAST(SUBSTRING(patient_code, 5) AS INTEGER)) AS max_num FROM patient WHERE patient_code LIKE 'PAT-%'";
+
         try (PreparedStatement ps = db.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 int maxNum = rs.getInt("max_num");
@@ -160,7 +165,6 @@ public class PatientRepositoryImpl implements PatientRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to select patient", e);
-
         }
         return 1;
     }

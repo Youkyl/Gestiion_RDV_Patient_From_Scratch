@@ -169,20 +169,18 @@ public class Patient {
 
 
     
-    public String toString() {
-        return String.format(
-            "%s %s %s %s %s %s %s %s %s %s %s",
-            Objects.toString(lastname, ""),
-            Objects.toString(firstname, ""),
-            Objects.toString(address, ""),
-            Objects.toString(phone, ""),
-            Objects.toString(medicalHistory, ""),
-            Objects.toString(email, ""),
-            Objects.toString(password, ""),
-            Objects.toString(birthday, ""),
-            Objects.toString(createdAt, ""),
-            Objects.toString(demandes, ""),
-            Objects.toString(patientCode, "")
-        );
-    }
-}
+public String toString() { 
+    return String.format( "%s %s %s %s %s %s %s %s", 
+        Objects.toString("Code patient: " + patientCode, ""),
+        Objects.toString("Nom: " + lastname, ""), 
+        Objects.toString("Prenom: " + firstname, ""), 
+        Objects.toString("Date de naissance: " + birthday, ""),
+        Objects.toString("Email: " + email, ""),
+        Objects.toString("Adresse: " + address, ""), 
+        Objects.toString("Telephone: " + phone, ""), 
+        Objects.toString("Antecedents: " + medicalHistory, "")
+        //Objects.toString("Mot de passe: " + password, ""), 
+        //Objects.toString("Date de creation dun compte patient: " + createdAt, ""), 
+        //Objects.toString("Demandes: " + demandes, "")
+    ); 
+} }
