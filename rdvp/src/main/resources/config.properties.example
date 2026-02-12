@@ -1,4 +1,4 @@
 # PostgreSQL connection - update with your database URL, user and password
-db.url=jdbc:
-db.user=
-db.password=
+db.url=jdbc:host://localhost:port/nom_de_la_DB
+db.user=username
+db.password=password
