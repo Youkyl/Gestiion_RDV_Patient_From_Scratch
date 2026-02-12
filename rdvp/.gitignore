@@ -1,6 +1,5 @@
 # Configuration sensible
 src/main/resources/config.properties
-src/main/resources/
 
 # Ou ignorer seulement config.properties
 # src/main/resources/config.properties
@@ -23,4 +22,3 @@ build/
 # Logs
 *.log
 
-!src/main/resources/config.properties.example

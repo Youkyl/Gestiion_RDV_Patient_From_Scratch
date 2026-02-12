@@ -1,0 +1,4 @@
+# PostgreSQL connection - update with your database URL, user and password
+db.url=jdbc:
+db.user=
+db.password=
