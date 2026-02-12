@@ -8,7 +8,6 @@ import com.grdvp.service.DemandeRDVService;
 import com.grdvp.service.PatientService;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Scanner;
 
 public class PatientView {
