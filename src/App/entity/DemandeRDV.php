@@ -14,8 +14,8 @@ class DemandeRDV
     private Statut $statut;
 
     public function __construct(
-        Patient $patient,
-        Specialite $specialite,
+        Patient | null $patient = null,
+        Specialite | null $specialite = null,
         int | null $id = null,
         string | null $descriptiion = null,
         DateTime | null $createAt = null,

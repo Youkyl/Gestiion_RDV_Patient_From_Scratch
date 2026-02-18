@@ -78,10 +78,12 @@ namespace App\core;
 //     }
 // }
 
-
-
+use App\controller\HomeController as ControllerHomeController;
+use App\controller\PatientController;
 use App\controllers\CompteController;
 use App\controllers\HomeController;
+use App\controller\LoginController;
+use App\controller\SignupController;
 use App\controllers\TransactionController;
 use App\http\Request;
 use ReflectionMethod;
@@ -100,20 +102,32 @@ class Router
      */
     private function defineRoutes(): void
     {
-        $this->addRoute('home', HomeController::class, ['index']);
-        
-        $this->addRoute('compte', CompteController::class, [
-            'index', 
-            'create', 
-            'store'
+        $this->addRoute('login', LoginController::class, [
+            'index',
+            'login',
+            'logout'
         ]);
         
-        $this->addRoute('transaction', TransactionController::class, [
+        $this->addRoute('signup', SignupController::class, [
             'index', 
-            'create', 
-            'store', 
-            'list'
+            'register',
         ]);
+        
+        $this->addRoute('home', ControllerHomeController::class, [
+            'index', 
+            
+        ]);
+
+        $this->addRoute('patient', PatientController::class, [
+            'dashboard',
+        ]);
+        
+        // $this->addRoute('transaction', TransactionController::class, [
+        //     'index', 
+        //     'create', 
+        //     'store', 
+        //     'list'
+        // ]);
     }
 
     /**
@@ -153,13 +167,23 @@ class Router
     private function parseUri(string $uri): array
     {
         if (empty($uri)) {
-            return ['home', 'index'];
+            // Si l'URI est vide mais la session est active, rediriger vers le profil du patient
+            if (isset($_SESSION['patient_id']) && isset($_SESSION['patient_firstname'])) {
+                header('Location: ' . WEB_ROOT . '/' . $_SESSION['patient_firstname']);
+                exit;
+            }
+            return ['login', 'index'];
         }
 
         $segments = explode('/', $uri);
         
-        $controllerName = $segments[0] ?? 'home';
-        $action = $segments[1] ?? 'index';
+        $controllerName = $segments[0] ?? 'patient';
+        $action = $segments[1] ?? 'dashboard';
+
+        // Si le contrôleur n'existe pas, c'est potentiellement un profil patient
+        if (!isset($this->routes[$controllerName])) {
+            return ['patient', 'dashboard'];
+        }
 
         return [$controllerName, $action];
     }
@@ -185,7 +209,7 @@ class Router
         $controllerClass = $routeConfig['controller'];
 
         if (!class_exists($controllerClass)) {
-            $this->notFound("Controller class introuvable");
+            $this->notFound("Controller class introuvable" . " " . $controllerClass);
             return;
         }
 

@@ -51,9 +51,15 @@ class Controller
            require_once PATH_ROOT . '/templates/base.layout.html.php';
     }
 
+    // protected function redirect(string $uri)
+    // {
+    //     header("Location: index.php?$uri");
+    //     exit;
+    // }
+
     protected function redirect(string $uri)
-    {
-        header("Location: index.php?$uri");
-        exit;
-    }
+{
+    header('Location: ' . WEB_ROOT . '/' . ltrim($uri, '/'));  // ex: https://localhost:8000/home/index
+    exit;
+}
 }

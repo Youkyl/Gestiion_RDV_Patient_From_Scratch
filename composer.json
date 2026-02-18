@@ -3,7 +3,7 @@
     "description": "Apllication de gestiion de RDV patient",
     "autoload": {
         "psr-4": {
-            "Youho\\PatientPhpFromScratch\\": "src/"
+            "App\\": "src/App/"
         }
     },
     "authors": [

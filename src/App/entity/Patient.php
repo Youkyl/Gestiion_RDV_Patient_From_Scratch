@@ -7,29 +7,29 @@ use DateTime;
 class Patient
 {
     private ?int $id;
-    private string $patientCode;
-    private string $lastname;
-    private string $firstname;
-    private string $address;
-    private string $phone;
-    private array $medicalHistory;
-    private string $email;
-    private string $password;
-    private DateTime $birthday;
-    private DateTime $creatAt;
-    private array $demandes;
+    private ?string $patientCode;
+    private ?string $lastname;
+    private ?string $firstname;
+    private ?string $address;
+    private ?string $phone;
+    private ?array $medicalHistory;
+    private ?string $email;
+    private ?string $password;
+    private ?DateTime $birthday;
+    private ?DateTime $creatAt;
+    private ?array $demandes;
 
     public function __construct(
+        string | null $lastname = null,
+        string | null $firstname = null,
+        string | null $email = null,
+        string | null $password = null,
+        DateTime | null $birthday = null,
         int | null $id = null,
         string | null $patientCode = null,
-        string $lastname,
-        string $firstname,
         string | null $address = null,
         string | null $phone = null,
         array | null $medicalHistory = null,
-        string $email,
-        string $password,
-        DateTime $birthday,
         DateTime | null $creatAt = null,
         array | null $demandes = null
     )
@@ -53,7 +53,7 @@ class Patient
         return $this->id;
     }
 
-    public function getPatientCode(): string
+    public function getPatientCode(): ?string
     {
         return $this->patientCode;
     }
@@ -98,12 +98,12 @@ class Patient
         return $this->birthday;
     }
     
-    public function getCreatAt(): DateTime
+    public function getCreatAt(): ?DateTime
     {
         return $this->creatAt;
     }
     
-    public function getDemandes(): array
+    public function getDemandes(): ?array
     {
         return $this->demandes;
     }
