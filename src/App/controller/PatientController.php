@@ -74,4 +74,29 @@ class PatientController extends Controller
             'totalWaitingApointment' => $totalWaitingApointment
         ]);
     }
+
+    public function profil()
+    {
+        // Vérifier si un patient est connecté
+        if (!isset($_SESSION['patient_id'])) {
+            $this->redirect('login/index');
+            return;
+        }
+
+        // Récupérer l'ID du patient depuis la session
+        $patientId = $_SESSION['patient_id'];
+
+        // Récupérer les infos du patient
+        $patient = $this->patientService->getConnectedPatientInfo($patientId);
+
+        if ($patient === null) {
+            $this->redirect('login/index');
+            return;
+        }
+
+        // Afficher la page du profil
+        $this->renderHtml('/patient/profil/index.html.php', [
+            'patient' => $patient,
+        ]);
+    }
 }

@@ -120,6 +120,7 @@ class Router
 
         $this->addRoute('patient', PatientController::class, [
             'dashboard',
+            'profil',
         ]);
         
         // $this->addRoute('transaction', TransactionController::class, [
@@ -187,6 +188,47 @@ class Router
 
         return [$controllerName, $action];
     }
+
+    /*private function parseUri(string $uri): array
+    { 
+        if (empty($uri)) {
+            // Si l'URI est vide mais la session est active, rediriger vers le profil du patient
+            if (isset($_SESSION['patient_id']) && isset($_SESSION['patient_firstname'])) {
+                header('Location: ' . WEB_ROOT . '/' . $_SESSION['patient_firstname']);
+                exit;
+            }
+            return ['login', 'index'];
+        }
+
+        $segments = explode('/', $uri);
+        
+        // Vérifier si le premier segment est le prénom du patient connecté
+        if (isset($_SESSION['patient_firstname']) && $segments[0] === $_SESSION['patient_firstname']) {
+            // Format: /Jason/patient/profil ou /Jason/patient/dashboard
+            $controllerName = $segments[1] ?? 'patient';
+            $action = $segments[2] ?? 'profil';
+            
+            // Vérifier que le contrôleur existe
+            if (!isset($this->routes[$controllerName])) {
+                return ['patient', 'dashboard']; // Rediriger vers le dashboard si le contrôleur n'existe pas
+            }
+            
+            return [$controllerName, $action];
+        }
+
+        // Si pas connecté et pas au bon format, redirection vers la page de connexion
+        if (!isset($_SESSION['patient_firstname'])) {
+            return ['login', 'index'];
+        }
+
+        // Si connecté mais mauvais format d'URL, rediriger vers le profil
+        if (isset($_SESSION['patient_firstname'])) {
+            header('Location: ' . WEB_ROOT . '/' . $_SESSION['patient_firstname'] . '/patient/profil');
+            exit;
+        }
+
+        return ['login', 'index'];
+    }*/
 
     /**
      * ✅ Dispatcher la requête

@@ -32,7 +32,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a href="#" class="nav-item active">
+      <a href="<?php echo WEB_ROOT . '/'.$patient->getFirstname(); ?>" class="nav-item active">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
           <polyline points="9 22 9 12 15 12 15 22"/>
@@ -40,7 +40,7 @@
         <span>Accueil</span>
       </a>
 
-      <a href="#" class="nav-item">
+      <a href="<?php echo WEB_ROOT .  '/' . $_SESSION['patient_firstname']; ?>/patient/profil" class="nav-item">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
